@@ -351,6 +351,9 @@ static bool ValidateUint32Range(const char* flagname, uint64_t value) {
   return true;
 }
 
+DEFINE_int32(wait_after_complete, 0,
+             "wait for a period of time after the operation is complete");
+
 DEFINE_int32(key_size, 16, "size of each key");
 
 DEFINE_int32(user_timestamp_size, 0,
@@ -3816,6 +3819,9 @@ class Benchmark {
       }
     }
 #endif  // ROCKSDB_LITE
+    if (FLAGS_wait_after_complete > 0) {
+      FLAGS_env->SleepForMicroseconds(FLAGS_wait_after_complete * 1000000);
+    }
 
     if (FLAGS_statistics) {
       fprintf(stdout, "STATISTICS:\n%s\n", dbstats->ToString().c_str());
